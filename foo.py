@@ -11,8 +11,23 @@ def determining_the_catch():
     return answer
 
 
-def sale_fish():
-    pass
+def sale_fish(location, spinning):
+    """Продаем зачет"""
+    bot.click(1369, 417)
+    bot.sleep(.2)
+    bot.click(985, 312)
+    bot.sleep(.2)
+    bot.click(956, 519)
+    bot.sleep(.2)
+    bot.click(1360, 337)
+    bot.sleep(.2)
+    bot.click(location)
+
+    bot.sleep(.2)
+    bot.click(586, 751)
+    bot.sleep(.2)
+    bot.doubleClick(spinning)
+    bot.sleep(.2)
 
 
 def travel():
@@ -28,7 +43,7 @@ def fish_tank(check):
 
         if check:
             if '(зачетная)' in result[1].split():
-                pass
+                return result
             else:
                 bot.hotkey('shift', 'e')
                 bot.sleep(.2)

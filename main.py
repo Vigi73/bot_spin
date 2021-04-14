@@ -36,7 +36,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.coo_location = 0
         self.coo_spinning = 0
         self.fish_count_for_sale = 0
-
+        self.fsale = 0
         self.ui.btnStop.setVisible(False)
 
         self.ui.btnStart.clicked.connect(self.start_timer)
@@ -59,8 +59,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
             if self.ui.sale.isChecked():
                 self.fish_count_for_sale = self.ui.saleCount.value()
                 try:
-                    self.coo_location = map(int, self.ui.coordLocacion.text().split(','))
-                    self.coo_spinning = map(int, self.ui.coordSpin.text().split(','))
+                    self.coo_location = tuple(map(int, self.ui.coordLocacion.text().split(',')))
+                    self.coo_spinning = tuple(map(int, self.ui.coordSpin.text().split(',')))
 
                 except:
                     pass
@@ -101,23 +101,29 @@ class MyMainWindow(QtWidgets.QMainWindow):
     # Основной цикл _____________________________________________________________________________
     def main_loop(self):
 
-        if self.ui.sale.isChecked():
-            if self.fish_count_for_sale <= 0:
-                sale_fish()
-                self.fish_count_for_sale = self.ui.saleCount.value()
-
         self.ui.lcdNumber.display(str(self.log_count))
 
-        
         # Если голод
         if foods():
             self.ui.txtLog.append(f'Перекусил')
 
         # Если поймали и открылся садок
         if res := fish_tank(self.ui.checkBox.isChecked()):
+            bot.keyUp('g')
+            bot.sleep(.1)
+            bot.keyUp('ctrlright')
+
             if res == - 1:
                 self.ui.txtLog.append('Отпустили не зачёт')
             else:
+                if self.ui.sale.isChecked():
+                    # if 'зачетная' in res[1].split():
+                    self.fsale += 1
+
+                if self.fsale >= self.ui.saleCount.value():
+                    sale_fish(self.coo_location, self.coo_spinning)
+                    self.fsale = 0
+
                 self.ui.txtLog.append(f'{res[0]}: {res[1]}')
                 self.log_count += 1
                 bot.sleep(.2)
