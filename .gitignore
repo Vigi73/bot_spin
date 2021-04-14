@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+build/
+dist/
+vSpin/
+fish.png
+logo.ico
+main.spec
