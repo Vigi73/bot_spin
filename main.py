@@ -4,6 +4,7 @@ from mainForm import Ui_MainWindow
 from foo import fish_tank, foods, travel, sale_fish
 from random import randrange as rnd
 from fishes import fish_name
+from PyQt5.QtWidgets import QFileDialog
 
 import configparser
 import sys
@@ -11,11 +12,6 @@ import pyautogui as bot
 import psutil as pu
 
 app = QtWidgets.QApplication(sys.argv)
-
-config = configparser.ConfigParser()
-config.read("settings.ini", encoding='utf-8')
-
-
 
 
 def tick(tmp, value):
@@ -45,6 +41,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.fish_count_for_sale = 0
         self.fsale = 0
         self.ui.btnStop.setVisible(False)
+        self.file_ini = ''
+
+        self.config = configparser.ConfigParser()
 
         self.ui.btnStart.clicked.connect(self.start_timer)
         self.ui.btnStop.clicked.connect(self.stop_timer)
@@ -52,44 +51,51 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.btnSave.clicked.connect(self.save_config)
         self.ui.btnOpen.clicked.connect(self.open_config)
 
+        self.ui.btnOpenDialog.clicked.connect(self.open_file)
+
         self.timer = QTimer()
         self.timer.timeout.connect(self.main_loop)
 
+    def open_file(self):
+        file, _ = QFileDialog.getOpenFileName(None, 'Open File', './', "Ini (*.ini)")
+        self.ui.lineEdit.setText(file)
+        self.config.read(file, encoding='utf-8')
+
     def save_config(self):
         '''Сохраняем конфигурацию'''
-        config.set('Options', 'pulling', str(self.ui.toPull.value()))
-        config.set('Options', 'point1', self.ui.point1.text())
-        config.set('Options', 'point2', self.ui.point2.text())
-        config.set('Options', 'point3', self.ui.point3.text())
-        config.set('Options', 'reset_min', str(int(self.ui.checkBox.isChecked())))
-        config.set('Options', 'rnd', str(int(self.ui.random.isChecked())))
-        config.set('Options', 'travel', str(int(self.ui.travel.isChecked())))
-        config.set('Options', 'sale', str(int(self.ui.sale.isChecked())))
-        config.set('Options', 'sale_count', str(self.ui.saleCount.value()))
-        config.set('Options', 'coo_location', self.ui.coordLocacion.text())
-        config.set('Options', 'coo_spinning', self.ui.coordSpin.text())
-        config.set('Options', 'selected_fish', str(int(self.ui.selestedFish.isChecked())))
-        config.set('Options', 'fish_name', self.ui.FishName.currentText())
+        self.config.set('Options', 'pulling', str(self.ui.toPull.value()))
+        self.config.set('Options', 'point1', self.ui.point1.text())
+        self.config.set('Options', 'point2', self.ui.point2.text())
+        self.config.set('Options', 'point3', self.ui.point3.text())
+        self.config.set('Options', 'reset_min', str(int(self.ui.checkBox.isChecked())))
+        self.config.set('Options', 'rnd', str(int(self.ui.random.isChecked())))
+        self.config.set('Options', 'travel', str(int(self.ui.travel.isChecked())))
+        self.config.set('Options', 'sale', str(int(self.ui.sale.isChecked())))
+        self.config.set('Options', 'sale_count', str(self.ui.saleCount.value()))
+        self.config.set('Options', 'coo_location', self.ui.coordLocacion.text())
+        self.config.set('Options', 'coo_spinning', self.ui.coordSpin.text())
+        self.config.set('Options', 'selected_fish', str(int(self.ui.selestedFish.isChecked())))
+        self.config.set('Options', 'fish_name', self.ui.FishName.currentText())
 
         with open('settings.ini', 'w', encoding='utf-8') as configfile:  # save
-            config.write(configfile)
+            self.config.write(configfile)
         bot.alert('Настройки сохранены...')
 
     def open_config(self):
         '''Читаем кофигурацию'''
-        self.ui.toPull.setValue(int(config['Options']['pulling']))
-        self.ui.point1.setText(config['Options']['point1'])
-        self.ui.point2.setText(config['Options']['point2'])
-        self.ui.point3.setText(config['Options']['point3'])
-        self.ui.checkBox.setChecked(int(config['Options']['reset_min']))
-        self.ui.random.setChecked(int(config['Options']['rnd']))
-        self.ui.travel.setChecked(int(config['Options']['travel']))
-        self.ui.sale.setChecked(int(config['Options']['sale']))
-        self.ui.saleCount.setValue(int(config['Options']['sale_count']))
-        self.ui.coordLocacion.setText(config['Options']['coo_location'])
-        self.ui.coordSpin.setText(config['Options']['coo_spinning'])
-        self.ui.selestedFish.setChecked(int(config['Options']['selected_fish']))
-        self.ui.FishName.setCurrentText((config['Options']['fish_name']).strip())
+        self.ui.toPull.setValue(int(self.config['Options']['pulling']))
+        self.ui.point1.setText(self.config['Options']['point1'])
+        self.ui.point2.setText(self.config['Options']['point2'])
+        self.ui.point3.setText(self.config['Options']['point3'])
+        self.ui.checkBox.setChecked(int(self.config['Options']['reset_min']))
+        self.ui.random.setChecked(int(self.config['Options']['rnd']))
+        self.ui.travel.setChecked(int(self.config['Options']['travel']))
+        self.ui.sale.setChecked(int(self.config['Options']['sale']))
+        self.ui.saleCount.setValue(int(self.config['Options']['sale_count']))
+        self.ui.coordLocacion.setText(self.config['Options']['coo_location'])
+        self.ui.coordSpin.setText(self.config['Options']['coo_spinning'])
+        self.ui.selestedFish.setChecked(int(self.config['Options']['selected_fish']))
+        self.ui.FishName.setCurrentText((self.config['Options']['fish_name']).strip())
 
     def stop_timer(self):
         self.ui.btnStart.setVisible(True)
