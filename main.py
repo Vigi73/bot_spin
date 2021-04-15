@@ -166,7 +166,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             bot.keyUp('ctrlright')
 
             if res == - 1:
-                self.ui.txtLog.append('Отпустили не зачёт')
+                self.ui.txtLog.append('Выкинули малька...')
             else:
                 if self.ui.sale.isChecked():
                     # if 'зачетная' in res[1].split():
@@ -175,7 +175,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 if self.fsale >= self.ui.saleCount.value():
                     sale_fish(self.coo_location, self.coo_spinning)
                     self.fsale = 0
-                    self.ui.txtLog.append('Продали зачёт..')
+                    self.ui.txtLog.clear()
+                    self.log_count = 0
 
                 self.ui.txtLog.append(f'{res[0]}: {res[1]}')
                 self.log_count += 1
