@@ -81,6 +81,7 @@ class Ui_MainWindow(object):
         self.sale.setObjectName("sale")
         self.saleCount = QtWidgets.QSpinBox(self.groupBox_2)
         self.saleCount.setGeometry(QtCore.QRect(220, 20, 42, 22))
+        self.saleCount.setProperty("value", 10)
         self.saleCount.setObjectName("saleCount")
         self.coordLocacion = QtWidgets.QLineEdit(self.groupBox_2)
         self.coordLocacion.setGeometry(QtCore.QRect(150, 50, 113, 20))

@@ -123,7 +123,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 if self.fsale >= self.ui.saleCount.value():
                     sale_fish(self.coo_location, self.coo_spinning)
                     self.fsale = 0
-                    self.ui.txtLog.append('Продали зачёт...')
+                    self.ui.txtLog.append('Продали зачёт..')
 
                 self.ui.txtLog.append(f'{res[0]}: {res[1]}')
                 self.log_count += 1
