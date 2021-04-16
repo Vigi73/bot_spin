@@ -22,7 +22,7 @@ def tick(tmp, value):
         bot.keyUp('g')
         tmp = value
         bot.press('t')
-
+file = ''
 
 class MyMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -57,6 +57,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.main_loop)
 
     def open_file(self):
+        global file
         file, _ = QFileDialog.getOpenFileName(None, 'Open File', './', "Ini (*.ini)")
         self.ui.lineEdit.setText(file)
         self.config.read(file, encoding='utf-8')
@@ -77,7 +78,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.config.set('Options', 'selected_fish', str(int(self.ui.selestedFish.isChecked())))
         self.config.set('Options', 'fish_name', self.ui.FishName.currentText())
 
-        with open('settings.ini', 'w', encoding='utf-8') as configfile:  # save
+        with open(file, 'w', encoding='utf-8') as configfile:  # save
             self.config.write(configfile)
         bot.alert('Настройки сохранены...')
 
