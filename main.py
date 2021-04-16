@@ -192,6 +192,10 @@ class MyMainWindow(QtWidgets.QMainWindow):
             # тянем пока не клюнуло tmp раз
             bot.keyUp('ctrlright')
             bot.sleep(.2)
+
+            if self.fl >= self.tmp_point:
+                self.fl = 0
+
             if self.tmp:
                 bot.keyDown('g')
                 self.tmp -= 1
@@ -205,10 +209,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     bot.click(self.list_point[self.fl])
                     self.fl += 1
 
-            if self.fl >= self.tmp_point:
-                self.fl = 0
-
-                # bot.press('t')
                 bot.sleep(.5)
         else:
             # вываживание рыбы
