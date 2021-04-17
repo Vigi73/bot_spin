@@ -160,11 +160,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
         # если запрет
         if self.ui.taboo.isChecked():
             if im := bot.locateOnScreen('img/taboo.bmp', region=(456, 182,  35, 29)):
-                self.ui.txtLog.append("На базе запрет !!! Бот отключен")
-                bot.press('ctrlright')
-                bot.sleep(.2)
                 bot.keyUp('g')
-                self.stop_timer()
+                bot.sleep(.2)
+                bot.keyUp('ctrlright')
+                bot.sleep(.2)
+                self.ui.txtLog.append("На базе запрет !!! Бот отключен")
+
 
         # Если голод
         if foods():
