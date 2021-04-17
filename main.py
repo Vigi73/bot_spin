@@ -77,6 +77,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.config.set('Options', 'coo_spinning', self.ui.coordSpin.text())
         self.config.set('Options', 'selected_fish', str(int(self.ui.selestedFish.isChecked())))
         self.config.set('Options', 'fish_name', self.ui.FishName.currentText())
+        self.config.set('Options', 'taboo', str(int(self.ui.taboo.isChecked())))
 
         with open(file, 'w', encoding='utf-8') as configfile:  # save
             self.config.write(configfile)
@@ -97,6 +98,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.coordSpin.setText(self.config['Options']['coo_spinning'])
         self.ui.selestedFish.setChecked(int(self.config['Options']['selected_fish']))
         self.ui.FishName.setCurrentText((self.config['Options']['fish_name']).strip())
+        self.ui.taboo.setChecked(int(self.config['Options']['taboo']))
 
     def stop_timer(self):
         self.ui.btnStart.setVisible(True)
@@ -155,6 +157,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
     def main_loop(self):
 
         self.ui.lcdNumber.display(str(self.log_count))
+        # если запрет
+        if self.ui.taboo.isChecked():
+            if im := bot.locateOnScreen('img/taboo.bmp', region=(453,180,  32, 30)):
+                self.ui.txtLog.append("На базе запрет !!! Бот отключен")
+                self.stop_timer()
 
         # Если голод
         if foods():
